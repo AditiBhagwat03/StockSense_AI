@@ -1,0 +1,21 @@
+POLICY ID: INV-001
+TITLE: Inventory Status Classification
+
+Purpose:
+Define how inventory coverage is interpreted.
+
+Stock coverage is calculated as:
+Days of Cover = Current Stock / Average Daily Sales
+
+Classification:
+Healthy: More than 14 days of coverage.
+Watch: 7 to 14 days of coverage.
+Medium Risk: 3 to less than 7 days of coverage.
+High Risk: Less than 3 days of coverage.
+
+If average daily sales cannot be reliably calculated
+because insufficient sales history is available, the
+system must not assign a stock-out risk level.
+
+The system must show the data used for every
+inventory classification.

@@ -1,0 +1,17 @@
+POLICY ID: OVS-001
+TITLE: Overstock Identification
+
+A product may be flagged for overstock review when
+its inventory coverage exceeds 21 weeks based on
+recent average weekly sales.
+
+Products with zero sales during the review period
+should also be flagged for inventory review when
+stock remains available.
+
+An overstock flag does not automatically mean that the
+product should be discounted.
+
+The system should recommend reviewing purchasing,
+inventory allocation, or promotional options rather than
+automatically selecting a discount.

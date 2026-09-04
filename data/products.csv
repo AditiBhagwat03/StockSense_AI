@@ -1,0 +1,41 @@
+product_id,product_name,category,price,supplier_id
+P001,Wireless Mouse,Computer Peripherals,899,SUP01
+P002,Mechanical Keyboard,Computer Peripherals,2499,SUP01
+P003,USB-C Hub,Computer Peripherals,1799,SUP02
+P004,Bluetooth Speaker,Audio,2999,SUP02
+P005,Smart Watch,Smart Devices,4499,SUP03
+P006,Wireless Earbuds,Audio,3499,SUP03
+P007,Power Bank,Mobile Accessories,1599,SUP04
+P008,USB-C Cable,Mobile Accessories,499,SUP04
+P009,Phone Stand,Accessories,699,SUP01
+P010,Webcam,Computer Peripherals,2299,SUP02
+P011,Laptop Sleeve,Accessories,1299,SUP01
+P012,Wireless Charger,Mobile Accessories,1499,SUP04
+P013,Gaming Mouse Pad,Accessories,799,SUP02
+P014,HDMI Cable,Computer Peripherals,699,SUP01
+P015,Smart Fitness Tracker,Smart Devices,2999,SUP03
+P016,Noise Cancelling Headphones,Audio,5999,SUP03
+P017,Laptop Cooling Pad,Computer Peripherals,1899,SUP02
+P018,Screen Protector,Mobile Accessories,399,SUP04
+P019,Bluetooth Keyboard,Computer Peripherals,2199,SUP01
+P020,Old Bluetooth Headset,Audio,1999,SUP03
+P021,Portable SSD 1TB,Computer Peripherals,7499,SUP02
+P022,USB Flash Drive 64GB,Computer Peripherals,699,SUP01
+P023,Car Phone Mount,Accessories,899,SUP04
+P024,Smart Plug,Smart Devices,1199,SUP03
+P025,Wi-Fi Extender,Smart Devices,2699,SUP02
+P026,Laptop Stand,Accessories,1699,SUP01
+P027,Type-C Adapter,Mobile Accessories,599,SUP04
+P028,Gaming Headset,Audio,3999,SUP03
+P029,Action Camera Mount,Accessories,1399,SUP02
+P030,Smart LED Bulb,Smart Devices,899,SUP03
+P031,Wireless Presenter,Computer Peripherals,1299,SUP01
+P032,Phone Ring Light,Mobile Accessories,999,SUP04
+P033,Desktop Speakers,Audio,2799,SUP02
+P034,Cable Organizer,Accessories,449,SUP01
+P035,Tablet Stylus,Mobile Accessories,1899,SUP04
+P036,Smart Door Sensor,Smart Devices,1599,SUP03
+P037,Ethernet Cable,Computer Peripherals,549,SUP02
+P038,Travel Adapter,Mobile Accessories,1999,SUP04
+P039,Mini Tripod,Accessories,1099,SUP01
+P040,Bluetooth Tracker,Smart Devices,1799,SUP03

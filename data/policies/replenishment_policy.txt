@@ -1,0 +1,21 @@
+POLICY ID: REP-001
+TITLE: Replenishment Review
+
+A product should be reviewed for replenishment when
+projected stock coverage is below the supplier lead time.
+
+Priority should increase when the product is already
+classified as high stock-out risk.
+
+The recommended replenishment quantity should consider:
+
+1. Current stock
+2. Recent average sales
+3. Target stock level
+4. Supplier lead time
+
+The system must present the assumptions used to
+calculate any suggested replenishment quantity.
+
+The system must not claim that a purchase order has
+been placed or that stock will definitely arrive.

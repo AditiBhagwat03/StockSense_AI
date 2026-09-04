@@ -1,0 +1,22 @@
+POLICY ID: ANM-001
+TITLE: Sales Change Detection
+
+Compare the current 30-day sales period with the
+previous 30-day period.
+
+A change of 30 percent or more in either direction
+should be flagged for investigation.
+
+Increase of 30 percent or more:
+SALES SPIKE
+
+Decrease of 30 percent or more:
+SALES DROP
+
+The system should report the measured change and
+the underlying sales values.
+
+A sales anomaly does not establish its cause.
+
+The system must not invent explanations when the
+available data does not contain causal information.

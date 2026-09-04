@@ -1,0 +1,16 @@
+POLICY ID: STO-001
+TITLE: Stock-Out Risk
+
+A product is considered high priority when its estimated
+days of stock coverage is below 3 days.
+
+If the product's supplier lead time is greater than its
+remaining stock coverage, replenishment should be
+reviewed immediately.
+
+If sufficient sales history is unavailable, the system
+must state that stock-out risk cannot be reliably
+estimated.
+
+The system must never guarantee that a product will
+sell out on a specific date.

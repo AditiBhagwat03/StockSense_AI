@@ -1,0 +1,5 @@
+supplier_id,supplier_name,lead_time_days
+SUP01,TechSource Distributors,5
+SUP02,Prime Electronics Supply,7
+SUP03,Metro Wholesale,4
+SUP04,DigitalMart Supply,6

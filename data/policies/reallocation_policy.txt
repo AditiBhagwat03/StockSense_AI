@@ -1,0 +1,21 @@
+POLICY ID: REL-001
+TITLE: Inter-Store Stock Review
+
+When a store has high stock-out risk for a product,
+the system may check other stores for available stock.
+
+If another store has sufficient inventory and lower
+sales demand, inter-store reallocation may be suggested
+for human review.
+
+The system must show:
+
+1. Store with the shortage
+2. Current stock at that store
+3. Sales rate at that store
+4. Candidate source store
+5. Available stock at the source store
+6. Reason for the recommendation
+
+The system must not claim that stock has been moved.
+Any reallocation recommendation requires human approval.

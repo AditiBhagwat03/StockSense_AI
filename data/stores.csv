@@ -1,0 +1,5 @@
+store_id,store_name,city,store_type
+S001,Central Store,Aurangabad,High Traffic
+S002,Mall Store,Aurangabad,Mall
+S003,Highway Store,Aurangabad,Highway
+S004,City Store,Aurangabad,Standard
