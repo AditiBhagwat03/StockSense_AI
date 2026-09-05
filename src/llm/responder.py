@@ -93,10 +93,10 @@ def respond_to_question(
 
 def run_grounding_tests() -> bool:
     """Call Gemini with verified existing analytics and retrieved local policy evidence."""
-    from database.connection import get_connection
-    from analytics.sales_anomalies import analyze_sales_anomaly
-    from analytics.stockout import analyze_stockout
-    from rag.retriever import retrieve_policy
+    from src.database.connection import get_connection
+    from src.analytics.sales_anomalies import analyze_sales_anomaly
+    from src.analytics.stockout import analyze_stockout
+    from src.rag.retriever import retrieve_policy
 
     scenarios = [
         ("Stock-out", "Should we take action on the Wireless Mouse at Central Store?", "stockout", "S001", "P001"),

@@ -4,6 +4,12 @@ from __future__ import annotations
 
 import os
 
+from dotenv import load_dotenv
+
+
+# Load environment variables from the project .env file.
+load_dotenv()
+
 
 DEFAULT_MODEL = "gemini-3.5-flash-lite"
 
@@ -23,23 +29,33 @@ class GeminiClient:
 
     def _initialize(self) -> None:
         if not self._api_key:
-            raise GeminiClientError("Gemini is not configured: GEMINI_API_KEY is missing.")
+            raise GeminiClientError(
+                "Gemini is not configured: GEMINI_API_KEY is missing."
+            )
+
         if self._client is not None:
             return
+
         try:
             from google import genai
             from google.genai import types
         except ImportError as error:
-            raise GeminiClientError("Gemini SDK is unavailable. Install the project requirements.") from error
+            raise GeminiClientError(
+                "Gemini SDK is unavailable. Install the project requirements."
+            ) from error
+
         try:
             self._client = genai.Client(api_key=self._api_key)
             self._types = types
         except Exception as error:
-            raise GeminiClientError("Gemini client initialization failed.") from error
+            raise GeminiClientError(
+                "Gemini client initialization failed."
+            ) from error
 
     def generate_json(self, prompt: str) -> str:
-        """Request JSON text from the configured Gemini model."""
+        """Request JSON text with Gemini."""
         self._initialize()
+
         try:
             response = self._client.models.generate_content(
                 model=self.model,
@@ -49,10 +65,18 @@ class GeminiClient:
                     temperature=0.0,
                 ),
             )
+
             if not response.text:
-                raise GeminiClientError("Gemini returned an empty response.")
+                raise GeminiClientError(
+                    "Gemini returned an empty response."
+                )
+
             return response.text
+
         except GeminiClientError:
             raise
+
         except Exception as error:
-            raise GeminiClientError("Gemini generation failed or the service is unavailable.") from error
+            raise GeminiClientError(
+                "Gemini generation failed or the service is unavailable."
+            ) from error
