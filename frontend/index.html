@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STOCKSENSE AI</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <header class="topbar">
+        <div>
+            <h1>STOCKSENSE AI</h1>
+            <p>AI-powered retail intelligence for smarter store decisions</p>
+        </div>
+
+        <div class="system-status">
+            <span class="status-dot"></span>
+            System Healthy
+        </div>
+    </header>
+
+    <main class="container">
+
+        <section class="hero">
+            <div>
+                <h2>Retail Intelligence Dashboard</h2>
+                <p>
+                    Monitor inventory risks, sales changes, and today's priorities
+                    from one place.
+                </p>
+            </div>
+        </section>
+
+        <section class="metrics">
+
+            <div class="metric-card">
+                <span>Total Products</span>
+                <strong id="total-products">40</strong>
+            </div>
+
+            <div class="metric-card">
+                <span>Low Stock</span>
+                <strong id="low-stock">--</strong>
+            </div>
+
+            <div class="metric-card">
+                <span>Overstock</span>
+                <strong id="overstock">--</strong>
+            </div>
+
+            <div class="metric-card">
+                <span>Sales Changes</span>
+                <strong id="sales-changes">--</strong>
+            </div>
+
+        </section>
+
+        <section class="dashboard-grid">
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>Stock-Out Risk</h3>
+                    <span class="badge">Inventory</span>
+                </div>
+
+                <div id="stockout-list" class="list">
+                    <p class="loading">Loading stock-out risks...</p>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>Sales Changes</h3>
+                    <span class="badge">30-Day Analysis</span>
+                </div>
+
+                <div id="sales-list" class="list">
+                    <p class="loading">Loading sales changes...</p>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="panel attention-panel">
+
+            <div class="panel-header">
+                <div>
+                    <h3>What Needs Attention Today?</h3>
+                    <p>Priority items identified from verified retail data.</p>
+                </div>
+            </div>
+
+            <div id="priority-list" class="list">
+                <p class="loading">Loading priorities...</p>
+            </div>
+
+        </section>
+
+        <section class="copilot-panel">
+
+            <div class="copilot-header">
+                <div>
+                    <h2>Ask STOCKSENSE AI</h2>
+                    <p>
+                        Ask questions about inventory, sales, suppliers, and priorities.
+                    </p>
+                </div>
+            </div>
+
+            <div class="question-box">
+                <input
+                    id="question-input"
+                    type="text"
+                    placeholder="Example: Which products are at risk of stock-out?"
+                >
+
+                <button id="ask-button">Ask AI</button>
+            </div>
+
+            <div id="copilot-response" class="copilot-response hidden">
+                <h3>AI Response</h3>
+                <div id="answer"></div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+        <p>STOCKSENSE AI • Retail Intelligence</p>
+    </footer>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
