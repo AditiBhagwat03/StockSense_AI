@@ -23,12 +23,12 @@ def run_validation() -> bool:
 
     overall = True
 
-    # 1. Root endpoint
+        # 1. Root endpoint
     response = client.get("/")
     passed = (
         response.status_code == 200
-        and response.json().get("service") == "STOCKSENSE AI"
-        and response.json().get("status") == "running"
+        and "text/html" in response.headers.get("content-type", "")
+        and "STOCKSENSE AI" in response.text
     )
     print(f"GET /: {'PASS' if passed else 'FAIL'}")
     overall = overall and passed

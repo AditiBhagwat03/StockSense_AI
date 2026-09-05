@@ -230,7 +230,12 @@ async function askCopilot() {
     button.disabled = true;
     button.textContent = "Thinking...";
 
-    answerBox.textContent = "Analyzing verified retail data...";
+    answerBox.innerHTML = `
+        <p class="copilot-loading">
+            Analyzing verified retail data...
+        </p>
+    `;
+
     responseBox.classList.remove("hidden");
 
     try {
@@ -252,16 +257,16 @@ async function askCopilot() {
             );
         }
 
-        answerBox.textContent =
-            data.answer ||
-            data.response ||
-            "No response was returned.";
+        renderCopilotResponse(data);
 
     } catch (error) {
         console.error("Copilot error:", error);
 
-        answerBox.textContent =
-            "Unable to process the question right now.";
+        answerBox.innerHTML = `
+            <div class="copilot-error">
+                Unable to process the question right now.
+            </div>
+        `;
 
     } finally {
         button.disabled = false;
@@ -270,13 +275,94 @@ async function askCopilot() {
 }
 
 
-function showDashboardError(message) {
-    document.getElementById("stockout-list").innerHTML =
-        `<p>${message}</p>`;
 
-    document.getElementById("sales-list").innerHTML =
-        `<p>${message}</p>`;
+function renderCopilotResponse(data) {
+    const answerBox = document.getElementById("answer");
 
-    document.getElementById("priority-list").innerHTML =
-        `<p>${message}</p>`;
+    const keyFacts = Array.isArray(data.key_facts)
+        ? data.key_facts
+        : [];
+
+    const evidence = Array.isArray(data.evidence)
+        ? data.evidence
+        : [];
+
+    const limitations = Array.isArray(data.limitations)
+        ? data.limitations
+        : [];
+
+    let html = "";
+
+    // Main answer
+    html += `
+        <div class="copilot-answer-section">
+            <h4>Answer</h4>
+            <p>${escapeHtml(data.answer || "No answer available.")}</p>
+        </div>
+    `;
+
+    // Verified facts
+    if (keyFacts.length > 0) {
+        html += `
+            <div class="copilot-section">
+                <h4>Verified Facts</h4>
+                <ul>
+                    ${keyFacts.map(fact => `
+                        <li>${escapeHtml(String(fact))}</li>
+                    `).join("")}
+                </ul>
+            </div>
+        `;
+    }
+
+    // Recommendation
+    if (data.recommendation) {
+        html += `
+            <div class="copilot-section recommendation-section">
+                <h4>Recommended Action</h4>
+                <p>${escapeHtml(data.recommendation)}</p>
+            </div>
+        `;
+    }
+
+    // Evidence
+    if (evidence.length > 0) {
+        html += `
+            <div class="copilot-section evidence-section">
+                <h4>Policy Evidence</h4>
+                ${evidence.map(item => `
+                    <div class="evidence-item">
+                        <strong>${escapeHtml(item.policy_id || "Policy")}</strong>
+                        <span>${escapeHtml(item.source || "")}</span>
+                        <p>${escapeHtml(item.reason || "")}</p>
+                    </div>
+                `).join("")}
+            </div>
+        `;
+    }
+
+    // Limitations
+    if (limitations.length > 0) {
+        html += `
+            <div class="copilot-section limitation-section">
+                <h4>Limitations</h4>
+                <ul>
+                    ${limitations.map(item => `
+                        <li>${escapeHtml(String(item))}</li>
+                    `).join("")}
+                </ul>
+            </div>
+        `;
+    }
+
+    answerBox.innerHTML = html;
+}
+
+function escapeHtml(value) {
+    return value
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
 }

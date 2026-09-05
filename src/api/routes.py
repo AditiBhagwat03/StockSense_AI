@@ -72,15 +72,23 @@ def detect_topic(question: str) -> str | None:
     if any(
         term in text
         for term in (
+            "sales",
             "sales spike",
             "spike",
             "sales increase",
             "sales growth",
             "increase",
+            "sales drop",
+            "sales decrease",
+            "sales decline",
+            "drop",
+            "decrease",
+            "decline",
         )
     ):
         return "sales_anomaly"
 
+        
     if any(
         term in text
         for term in (
@@ -113,6 +121,11 @@ def detect_topic(question: str) -> str | None:
             "low stock",
             "stock coverage",
             "stocking out",
+            "take action",
+            "action on",
+            "what should we do",
+            "should we act",
+            "action needed",
         )
     ):
         return "stockout"
@@ -244,11 +257,35 @@ def _reallocation_facts(connection: sqlite3.Connection) -> dict[str, object]:
     }
 
 
+
+
+def _find_product_id(
+    connection: sqlite3.Connection,
+    question: str,
+) -> str | None:
+    """Find a product explicitly mentioned in the user's question."""
+    text = question.lower()
+
+    products = connection.execute(
+        """
+        SELECT product_id, product_name
+        FROM products
+        ORDER BY LENGTH(product_name) DESC
+        """
+    ).fetchall()
+
+    for product_id, product_name in products:
+        if product_id.lower() in text or product_name.lower() in text:
+            return product_id
+
+    return None
+
 def collect_verified_facts(
     connection: sqlite3.Connection,
     topic: str,
+    question: str = "",
 ) -> dict[str, object]:
-    """Call only the existing deterministic analytics or parameterized local SQLite queries."""
+    """Call only existing deterministic analytics and filter by explicit product when possible."""
 
     if topic == "stockout":
         return _stockout_facts(connection)
@@ -257,7 +294,27 @@ def collect_verified_facts(
         return _overstock_facts(connection)
 
     if topic == "sales_anomaly":
-        return _sales_facts(connection)
+        facts = _sales_facts(connection)
+
+        product_id = _find_product_id(
+            connection,
+            question,
+        )
+
+        if product_id is not None:
+            filtered = [
+                item
+                for item in facts["flagged_assessments"]
+                if item["product_id"] == product_id
+            ]
+
+            return {
+                **facts,
+                "requested_product_id": product_id,
+                "flagged_assessments": filtered,
+            }
+
+        return facts
 
     if topic == "priorities":
         return {
@@ -307,6 +364,7 @@ def copilot(request: CopilotRequest) -> dict[str, object]:
             verified_facts = collect_verified_facts(
                 connection,
                 topic,
+                request.question,
             )
 
         policy_evidence = retrieve_policy(
