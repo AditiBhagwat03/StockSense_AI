@@ -1,58 +1,100 @@
-"""Lightweight direct validation for the FastAPI application and orchestration handlers."""
+"""HTTP-level validation for the STOCKSENSE AI FastAPI backend."""
 
 from __future__ import annotations
 
 import sys
 from pathlib import Path
 
-from pydantic import ValidationError
+from fastapi.testclient import TestClient
 
-if __package__ in (None, ""):
+if __package__ in (None, "", "api"):
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-    from api.main import app, health, root
-    from api.routes import copilot
-    from api.schemas import CopilotRequest
+    from api.main import app
 else:
-    from .main import app, health, root
-    from .routes import copilot
-    from .schemas import CopilotRequest
+    from .main import app
+
+
+client = TestClient(app)
 
 
 def run_validation() -> bool:
-    """Validate FastAPI imports, endpoint handlers, request checks, and existing module imports."""
-    from src.analytics.priorities import build_priorities
-    from src.database.connection import get_connection
-    from src.llm.responder import respond_to_question
-    from src.rag.retriever import retrieve_policy
+    print("STOCKSENSE AI FASTAPI HTTP VALIDATION")
+    print("------------------------------------")
 
-    checks: list[tuple[str, bool]] = []
-    paths = {route.path for route in app.routes}
-    checks.append(("FastAPI app imports", {"/", "/health", "/api/copilot"} <= paths))
-    checks.append(("GET /", root() == {"service": "STOCKSENSE AI", "status": "running"}))
-    checks.append(("GET /health", health()["status"] == "healthy"))
+    overall = True
 
-    valid_response = copilot(CopilotRequest(question="Which products are at high stock-out risk?"))
-    checks.append(("POST /api/copilot accepts valid question", {"answer", "key_facts", "recommendation", "evidence", "limitations"} <= valid_response.keys()))
-    try:
-        CopilotRequest(question="   ")
-        empty_rejected = False
-    except ValidationError:
-        empty_rejected = True
-    checks.append(("Empty question rejected", empty_rejected))
+    # 1. Root endpoint
+    response = client.get("/")
+    passed = (
+        response.status_code == 200
+        and response.json().get("service") == "STOCKSENSE AI"
+        and response.json().get("status") == "running"
+    )
+    print(f"GET /: {'PASS' if passed else 'FAIL'}")
+    overall = overall and passed
 
-    unsupported_response = copilot(CopilotRequest(question="Tell me a joke about the moon."))
-    checks.append(("Unsupported question controlled", unsupported_response.get("status") == "error"))
-    checks.append(("Steps 6-9 imports", all((get_connection, build_priorities, retrieve_policy, respond_to_question))))
+    # 2. Health endpoint
+    response = client.get("/health")
+    passed = response.status_code == 200 and response.json().get("status") == "healthy"
+    print(f"GET /health: {'PASS' if passed else 'FAIL'}")
+    overall = overall and passed
 
-    print("STOCKSENSE AI FASTAPI VALIDATION")
-    print("---------------------------------")
-    for name, passed in checks:
-        print(f"{name}: {'PASS' if passed else 'FAIL'}")
-    overall = all(passed for _, passed in checks)
+    # 3. Valid copilot request
+    response = client.post(
+        "/api/copilot",
+        json={"question": "Which products are at risk of stock-out?"},
+    )
+    passed = response.status_code == 200
+    print(f"POST /api/copilot valid request: {'PASS' if passed else 'FAIL'}")
+    overall = overall and passed
+
+    # 4. Verify response structure
+    if response.status_code == 200:
+        data = response.json()
+        required_fields = {
+            "answer",
+            "key_facts",
+            "recommendation",
+            "evidence",
+            "limitations",
+            "status",
+        }
+        passed = required_fields.issubset(data.keys())
+    else:
+        passed = False
+
+    print(f"Copilot response schema: {'PASS' if passed else 'FAIL'}")
+    overall = overall and passed
+
+    # 5. Empty question should be rejected
+    response = client.post(
+        "/api/copilot",
+        json={"question": ""},
+    )
+    passed = response.status_code == 422
+    print(f"Empty question rejected: {'PASS' if passed else 'FAIL'}")
+    overall = overall and passed
+
+    # 6. Unsupported question should be controlled
+    response = client.post(
+        "/api/copilot",
+        json={"question": "What is the weather today?"},
+    )
+
+    if response.status_code == 200:
+        data = response.json()
+        passed = data.get("status") == "error"
+    else:
+        passed = False
+
+    print(f"Unsupported question controlled: {'PASS' if passed else 'FAIL'}")
+    overall = overall and passed
+
+    print("------------------------------------")
     print(f"OVERALL: {'PASS' if overall else 'FAIL'}")
+
     return overall
 
 
 if __name__ == "__main__":
-    if not run_validation():
-        raise SystemExit(1)
+    raise SystemExit(0 if run_validation() else 1)
